@@ -8,47 +8,45 @@ function Form() {
     age: "",
     emp: false,
     salary: "",
-    isBtnDisabled: true,
   });
 
-  const [showPopup, setShowPopup] = useState(false);
-  const [showText, setShowText] = useState("");
+  const [showPopup, setShowPopup] = useState({
+    visibility: false,
+    text: "",
+    msgStyle: '',
+  });
 
   function handleSubmit(event) {
     event.preventDefault();
-  }
 
-  function validateSubmit(updatedForm) {
-    if (
-      updatedForm.name !== "" &&
-      updatedForm.phone !== "" &&
-      updatedForm.age !== "" &&
-      updatedForm.emp === true
-    ) {
-      setFormData({ ...updatedForm, isBtnDisabled: false });
-      setShowPopup(<Popup text={showText} />);
-    } else {
-      setFormData({ ...updatedForm, isBtnDisabled: false });
-      setShowPopup(<Popup text={showText} />);
+    setShowPopup({...showPopup, visibility: true  });
+  } 
+
+  function handleDivClick() {
+    if (showPopup.visibility) {
+
+      setShowPopup({...showPopup, visibility: false  } );
     }
-    handleShowText();
-    console.log(showText);
   }
 
   function handleShowText() {
     if (formData.age < 18 || formData.age > 100) {
-      setShowText("Age is not allowed!");
+      setShowPopup({...showPopup, text: "Age must be between 18 and 100 years!", msgStyle: 'red' });
     } else if (formData.phone.length < 9 || formData.phone.length > 13) {
-      setShowText("Phone number format is incorrect!");
-    } else {
-      setShowText("The Form Has Been Submitted Successfully.");
+      setShowPopup({...showPopup, text: "Phone number must be between 9 and 13 digits!",  msgStyle: 'red'});
+    } else if  (formData.name && (formData.age > 18 || formData.age < 100) && (formData.phone.length > 9 || formData.phone.length < 13)) {
+      setShowPopup({...showPopup, text: "Form submitted successfully!",msgStyle: 'green' });
+    }else{
+      setShowPopup({...showPopup, text: "Please fill all the required fields!" , msgStyle: 'red'});
     }
 
-    console.log(showText);
+    console.log(showPopup.text);
   }
 
+  const isBtnDisabled = formData.name && formData.age && formData.emp ? false : true;
+
   return (
-    <div className="parent">
+    <div className="parent" onClick={handleDivClick}>
       <div className="box">
         <div className="header">Requesting a Loan</div>
         <hr />
@@ -63,7 +61,7 @@ function Form() {
                 const updateData = { ...formData, name: event.target.value };
                 setFormData(updateData);
 
-                validateSubmit(updateData);
+                // validateSubmit(updateData);
               }}
             />
           </div>
@@ -77,7 +75,7 @@ function Form() {
                 const updateData = { ...formData, phone: event.target.value };
                 setFormData(updateData);
 
-                validateSubmit(updateData);
+                // validateSubmit(updateData);
               }}
             />
           </div>
@@ -92,7 +90,7 @@ function Form() {
 
                 setFormData(updateData);
 
-                validateSubmit(updateData);
+                // validateSubmit(updateData);
               }}
             />
           </div>
@@ -107,7 +105,7 @@ function Form() {
 
                 setFormData(updateData);
 
-                validateSubmit(updateData);
+                // validateSubmit(updateData);
               }}
             />
           </div>
@@ -120,7 +118,7 @@ function Form() {
                 const updateData = { ...formData, salary: event.target.value };
 
                 setFormData(updateData);
-                validateSubmit(updateData);
+                // validateSubmit(updateData);
               }}
             >
               <option>2000</option>
@@ -133,15 +131,16 @@ function Form() {
             <input
               type="submit"
               value="Submit"
-              disabled={formData.isBtnDisabled}
+              disabled={isBtnDisabled}
               onClick={() => {
                 handleShowText();
-              }}
+              }} style={{cursor: 'pointer'}}
+              className={!(formData.name && formData.age && formData.emp) ? 'disabled' : ''}
             />
           </div>
         </form>
       </div>
-      <Popup />
+      <Popup visibility={showPopup.visibility} text={showPopup.text} msgStyle={showPopup.msgStyle}/>
     </div>
   );
 }

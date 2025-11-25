@@ -115,3 +115,8 @@ input[type="submit"]:hover {
   background-color: white;
   color: green;
 }
+
+.disabled {
+  background-color: #5872a5 !important;
+  cursor: not-allowed !important;
+}

@@ -1,11 +1,10 @@
-function Popup({ text }) {
+function Popup({ visibility, text, msgStyle }) {
   return (
-    <div className="popup">
-      {/* <p>{text}</p> */}
+    visibility ? <div className="popup" >
       <div className="popup-content">
-        <p>dsfdsa</p>
+        <p style={{color: msgStyle}}>{text}</p>
       </div>
-    </div>
+    </div> : ''
   );
 }
 
